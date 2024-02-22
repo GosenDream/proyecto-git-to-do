@@ -4,7 +4,7 @@ from tkinter import messagebox
 class TaskApp:
     def __init__(self, master):
         self.master = master
-        self.master.title("Aplicación de Tareas by Marcos")
+        self.master.title("Aplicación de Tareas")
         
         self.tasks = []
         
@@ -17,13 +17,19 @@ class TaskApp:
         self.label_category = tk.Label(master, text="Categoría:")
         self.label_category.grid(row=1, column=0, sticky="w", padx=5, pady=5)
         
-        self.entry_category = tk.Entry(master, width=30)
+        self.category_var = tk.StringVar(master)
+        self.category_var.set("trabajo")  # Valor por defecto
+        self.category_options = ["trabajo", "personal", "iglesia"]
+        self.entry_category = tk.OptionMenu(master, self.category_var, *self.category_options)
         self.entry_category.grid(row=1, column=1, padx=5, pady=5)
         
         self.label_priority = tk.Label(master, text="Prioridad:")
         self.label_priority.grid(row=2, column=0, sticky="w", padx=5, pady=5)
         
-        self.entry_priority = tk.Entry(master, width=30)
+        self.priority_var = tk.IntVar(master)
+        self.priority_var.set(1)  # Valor por defecto
+        self.priority_options = [1, 2, 3]
+        self.entry_priority = tk.OptionMenu(master, self.priority_var, *self.priority_options)
         self.entry_priority.grid(row=2, column=1, padx=5, pady=5)
         
         self.btn_add_task = tk.Button(master, text="Agregar Tarea", command=self.add_task)
@@ -34,15 +40,15 @@ class TaskApp:
         
     def add_task(self):
         desc = self.entry_desc.get()
-        category = self.entry_category.get()
-        priority = self.entry_priority.get()
+        category = self.category_var.get()
+        priority = self.priority_var.get()
         
-        if desc and category and priority:
+        if desc:
             self.tasks.append({"Descripción": desc, "Categoría": category, "Prioridad": priority})
             self.update_task_listbox()
             self.clear_entries()
         else:
-            messagebox.showwarning("Error", "Por favor, complete todos los campos.")
+            messagebox.showwarning("Error", "Por favor, complete la descripción de la tarea.")
             
     def update_task_listbox(self):
         self.listbox_tasks.delete(0, tk.END)
@@ -51,8 +57,8 @@ class TaskApp:
             
     def clear_entries(self):
         self.entry_desc.delete(0, tk.END)
-        self.entry_category.delete(0, tk.END)
-        self.entry_priority.delete(0, tk.END)
+        self.category_var.set("trabajo")  # Reiniciar a valor por defecto
+        self.priority_var.set(1)  # Reiniciar a valor por defecto
         
 def main():
     root = tk.Tk()
